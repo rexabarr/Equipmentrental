@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catan Strategy Group - Equipment Partnership</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0f1114;
+  --bg2: #16181d;
+  --bg3: #1e2128;
+  --yellow: #F5A623;
+  --yellow-dim: #c4841a;
+  --yellow-glow: rgba(245, 166, 35, 0.15);
+  --text: #e8e8e8;
+  --text-dim: #9a9da3;
+  --text-dark: #6b6e75;
+  --green: #34c759;
+  --red: #ff453a;
+  --border: #2a2d34;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 166, 35, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  z-index: 0;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+
+.hero-tag {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  padding: 6px 16px;
+  margin-bottom: 32px;
+  background: rgba(245, 166, 35, 0.05);
+}
+
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(42px, 8vw, 72px);
+  line-height: 1.0;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.hero h1 .highlight {
+  color: var(--yellow);
+  display: block;
+}
+
+.hero-sub {
+  font-size: clamp(18px, 3vw, 22px);
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 0;
+  margin-bottom: 48px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 520px;
+}
+
+.hero-stat {
+  flex: 1;
+  padding: 20px 16px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--yellow);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.hero-stat-label {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--yellow);
+  color: #0f1114;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 40px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cta-btn:hover { background: #ffc04d; transform: translateY(-1px); }
+
+.cta-sub {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+/* ─── COMPARISON ─── */
+.compare {
+  padding: 80px 24px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.section-inner { max-width: 800px; margin: 0 auto; }
+
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 5vw, 40px);
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 40px;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.compare-card {
+  border: 1px solid var(--border);
+  padding: 32px 24px;
+  position: relative;
+  background: var(--bg);
+}
+
+.compare-card.theirs { opacity: 0.7; }
+
+.compare-card.yours {
+  border-color: var(--yellow);
+  background: linear-gradient(180deg, rgba(245,166,35,0.04) 0%, var(--bg) 100%);
+}
+
+.compare-card-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-card.theirs .compare-card-tag { color: var(--text-dark); }
+.compare-card.yours .compare-card-tag { color: var(--yellow); }
+.compare-card.yours { border-bottom-color: rgba(245,166,35,0.2); }
+
+.compare-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 15px;
+}
+
+.compare-row:last-child { border-bottom: none; }
+.compare-label { color: var(--text-dim); }
+.compare-val { font-weight: 600; text-align: right; }
+.compare-card.theirs .compare-val { color: var(--red); }
+.compare-card.yours .compare-val { color: var(--green); }
+
+.compare-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0 0;
+  margin-top: 8px;
+  border-top: 2px solid var(--border);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.compare-card.yours .compare-total { border-top-color: rgba(245,166,35,0.3); }
+
+.savings-bar {
+  margin-top: 32px;
+  padding: 24px;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  background: rgba(52, 199, 89, 0.05);
+  text-align: center;
+}
+
+.savings-bar .num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  color: var(--green);
+  line-height: 1;
+}
+
+.savings-bar .label {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ─── DEAL ─── */
+.deal {
+  padding: 80px 24px;
+  background: var(--bg);
+}
+
+.deal-grid {
+  display: grid;
+  gap: 2px;
+  margin-top: 20px;
+}
+
+.deal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.deal-cell {
+  padding: 16px 20px;
+  background: var(--bg2);
+  font-size: 15px;
+}
+
+.deal-cell.label {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.deal-cell.value {
+  color: var(--text);
+  font-weight: 600;
+  text-align: right;
+}
+
+.deal-cell.header {
+  background: var(--bg3);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  grid-column: 1 / -1;
+  padding: 14px 20px;
+}
+
+/* ─── WHAT YOU GET ─── */
+.included {
+  padding: 80px 24px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.check-list { margin-top: 20px; }
+
+.check-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.check-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(52, 199, 89, 0.12);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* ─── REQUIREMENTS ─── */
+.reqs {
+  padding: 80px 24px;
+  background: var(--bg);
+}
+
+.req-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.req-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--yellow);
+  margin-top: 4px;
+}
+
+/* ─── CTA BOTTOM ─── */
+.bottom-cta {
+  padding: 80px 24px;
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+.bottom-cta .section-title { margin-bottom: 16px; }
+
+.bottom-cta-sub {
+  color: var(--text-dim);
+  font-size: 18px;
+  margin-bottom: 40px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.phone-display {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(32px, 6vw, 48px);
+  color: var(--yellow);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.phone-note {
+  font-size: 14px;
+  color: var(--text-dark);
+  margin-top: 16px;
+}
+
+/* ─── FORM ─── */
+.form-section {
+  padding: 80px 24px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.form-wrap {
+  margin-top: 32px;
+  max-width: 560px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--yellow);
+}
+
+.form-input::placeholder {
+  color: var(--text-dark);
+}
+
+.radio-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.radio-option {
+  position: relative;
+}
+
+.radio-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-option label {
+  display: block;
+  padding: 12px 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.radio-option input:checked + label {
+  border-color: var(--yellow);
+  color: var(--yellow);
+  background: rgba(245, 166, 35, 0.06);
+}
+
+.radio-option label:hover {
+  border-color: rgba(245, 166, 35, 0.4);
+}
+
+.form-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--yellow);
+  color: #0f1114;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.form-submit:hover {
+  background: #ffc04d;
+  transform: translateY(-1px);
+}
+
+.form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-success {
+  display: none;
+  padding: 24px;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  background: rgba(52, 199, 89, 0.05);
+  text-align: center;
+  margin-top: 24px;
+}
+
+.form-success .check {
+  font-size: 36px;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+
+.form-success .msg {
+  font-size: 18px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.form-success .submsg {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.form-error {
+  display: none;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 69, 58, 0.3);
+  background: rgba(255, 69, 58, 0.05);
+  color: var(--red);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  padding: 32px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dark);
+  border-top: 1px solid var(--border);
+}
+
+/* ─── MOBILE ─── */
+@media (max-width: 640px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-stats {
+    flex-direction: column;
+  }
+  .hero-stat {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-stat:last-child { border-bottom: none; }
+  .deal-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Greater Houston Equipment Partnership</div>
+    <h1>
+      Stop paying $350<br>a day to rent
+      <span class="highlight">a skid steer.</span>
+    </h1>
+    <p class="hero-sub">Get a Bobcat compact track loader on your trailer for $2,000 a month. No debt. No credit check. Keep 100% of your client revenue.</p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">$2,000</div>
+        <div class="hero-stat-label">Per Month Base</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$250</div>
+        <div class="hero-stat-label">Attachments Monthly</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$3,000</div>
+        <div class="hero-stat-label">First Month + Deposit</div>
+      </div>
+    </div>
+
+    <a href="#contact" class="cta-btn">Get Started &#8594;</a>
+    <div class="cta-sub">Serious operators only. Existing client base required.</div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="compare">
+  <div class="section-inner">
+    <div class="section-label">The Math</div>
+    <div class="section-title">What you pay now vs. what you could pay</div>
+
+    <div class="compare-grid">
+      <div class="compare-card theirs">
+        <div class="compare-card-tag">Rental Yard (15 Days)</div>
+        <div class="compare-row"><span class="compare-label">Daily rate</span><span class="compare-val">$355 - $370</span></div>
+        <div class="compare-row"><span class="compare-label">15 days</span><span class="compare-val">$5,325 - $5,550</span></div>
+        <div class="compare-row"><span class="compare-label">Delivery/pickup</span><span class="compare-val">$200 - $600</span></div>
+        <div class="compare-row"><span class="compare-label">Damage waiver</span><span class="compare-val">$530 - $830</span></div>
+        <div class="compare-row"><span class="compare-label">Grapple rental</span><span class="compare-val">$750 - $1,125</span></div>
+        <div class="compare-total"><span>Monthly total</span><span class="compare-val">$6,700 - $7,700</span></div>
+      </div>
+
+      <div class="compare-card yours">
+        <div class="compare-card-tag">This Partnership (15 Days)</div>
+        <div class="compare-row"><span class="compare-label">Monthly base</span><span class="compare-val">$2,000</span></div>
+        <div class="compare-row"><span class="compare-label">3 overage days</span><span class="compare-val">$450</span></div>
+        <div class="compare-row"><span class="compare-label">Delivery/pickup</span><span class="compare-val">$0</span></div>
+        <div class="compare-row"><span class="compare-label">Insurance</span><span class="compare-val">Included</span></div>
+        <div class="compare-row"><span class="compare-label">Grapple + auger</span><span class="compare-val">$250 flat</span></div>
+        <div class="compare-total"><span>Monthly total</span><span class="compare-val">$2,700</span></div>
+      </div>
+    </div>
+
+    <div class="savings-bar">
+      <div class="num">$4,000 - $5,000</div>
+      <div class="label">You save this every single month</div>
+    </div>
+  </div>
+</section>
+
+<!-- THE DEAL -->
+<section class="deal">
+  <div class="section-inner">
+    <div class="section-label">The Deal</div>
+    <div class="section-title">Simple pricing. No surprises.</div>
+
+    <div class="deal-grid">
+      <div class="deal-row"><div class="deal-cell header">To Get Started</div></div>
+      <div class="deal-row"><div class="deal-cell label">Security deposit</div><div class="deal-cell value">$2,000</div></div>
+      <div class="deal-row"><div class="deal-cell label">First month (intro rate)</div><div class="deal-cell value">$1,000</div></div>
+      <div class="deal-row"><div class="deal-cell label">Total out of pocket</div><div class="deal-cell value" style="color: var(--yellow);">$3,000</div></div>
+
+      <div class="deal-row"><div class="deal-cell header">Monthly (After Month 1)</div></div>
+      <div class="deal-row"><div class="deal-cell label">Base rate (12 days, 6 hr cap)</div><div class="deal-cell value">$2,000/mo</div></div>
+      <div class="deal-row"><div class="deal-cell label">Attachments (grapple + auger)</div><div class="deal-cell value">$250/mo flat</div></div>
+      <div class="deal-row"><div class="deal-cell label">Extra days (day 13+)</div><div class="deal-cell value">$150/day</div></div>
+      <div class="deal-row"><div class="deal-cell label">Overtime (past daily cap)</div><div class="deal-cell value">$30/hr</div></div>
+
+      <div class="deal-row"><div class="deal-cell header">The Machine</div></div>
+      <div class="deal-row"><div class="deal-cell label">Equipment</div><div class="deal-cell value">Bobcat Compact Track Loader</div></div>
+      <div class="deal-row"><div class="deal-cell label">Cab</div><div class="deal-cell value">Enclosed with AC</div></div>
+      <div class="deal-row"><div class="deal-cell label">Controls</div><div class="deal-cell value">Joystick with aux hydraulics</div></div>
+      <div class="deal-row"><div class="deal-cell label">Attachments included</div><div class="deal-cell value">72" grapple + auger (4 bits)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section class="included">
+  <div class="section-inner">
+    <div class="section-label">What You Get</div>
+    <div class="section-title">We handle the machine. You handle the work.</div>
+
+    <div class="check-list">
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>Exclusive use of the machine. It sits on your trailer, available whenever you need it.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>72" grapple bucket and auger set with 4 bit sizes. Always on your trailer, always ready.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>Equipment insurance covered by the owner. No damage waiver fees.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>Oil changes and scheduled maintenance handled by the owner.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>Major repairs (engine, hydraulics, tracks) are the owner's responsibility.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>No debt on your credit. No financing. No loan payments for 5 years.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>You keep 100% of what you earn from your clients. This is your business.</div></div>
+      <div class="check-item"><div class="check-icon">&#10003;</div><div>30-day walkaway after the first year. No long-term trap.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE NEED -->
+<section class="reqs">
+  <div class="section-inner">
+    <div class="section-label">What We Need From You</div>
+    <div class="section-title">This is not for everybody.</div>
+
+    <div class="check-list">
+      <div class="req-item"><div class="req-icon">&#9656;</div><div>3+ years operating compact track loaders. You know what you are doing.</div></div>
+      <div class="req-item"><div class="req-icon">&#9656;</div><div>Existing client base in the Greater Houston area. You already have work lined up.</div></div>
+      <div class="req-item"><div class="req-icon">&#9656;</div><div>Your own equipment trailer. You can move the machine to job sites independently.</div></div>
+      <div class="req-item"><div class="req-icon">&#9656;</div><div>Active general liability insurance at $1,000,000 minimum.</div></div>
+      <div class="req-item"><div class="req-icon">&#9656;</div><div>$2,000 security deposit and $1,000 first month before the machine is delivered.</div></div>
+      <div class="req-item"><div class="req-icon">&#9656;</div><div>You handle fuel, daily greasing, pre-operation inspections, and your own schedule.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEREST FORM -->
+<section class="form-section" id="contact">
+  <div class="section-inner">
+    <div class="section-label">Interested?</div>
+    <div class="section-title">Tell us about yourself.</div>
+
+    <div class="form-wrap">
+      <div id="theForm">
+        <div class="form-group">
+          <span class="form-label">Your Name *</span>
+          <input type="text" id="fname" class="form-input" placeholder="Full name" required>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Email *</span>
+          <input type="email" id="femail" class="form-input" placeholder="you@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Phone Number *</span>
+          <input type="tel" id="fphone" class="form-input" placeholder="(XXX) XXX-XXXX" required>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Years of Skid Steer Experience *</span>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="experience" id="exp1" value="Under 2 years" required>
+              <label for="exp1">Under 2</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="experience" id="exp2" value="2 to 4 years">
+              <label for="exp2">2 to 4</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="experience" id="exp3" value="Over 4 years">
+              <label for="exp3">Over 4</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Days Per Month You Need a Machine *</span>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="days" id="days1" value="Under 10 days" required>
+              <label for="days1">Under 10</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="days" id="days2" value="10 to 15 days">
+              <label for="days2">10 to 15</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="days" id="days3" value="More than 15 days">
+              <label for="days3">More than 15</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="form-submit" id="submitBtn" onclick="submitForm()">Submit &#8594;</button>
+        <div class="form-error" id="formError">Please fill out all fields before submitting.</div>
+      </div>
+
+      <div class="form-success" id="formSuccess">
+        <div class="check">&#10003;</div>
+        <div class="msg">Got it. We will be in touch.</div>
+        <div class="submsg">Expect a call within 24 to 48 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function submitForm() {
+  var name = document.getElementById('fname').value.trim();
+  var email = document.getElementById('femail').value.trim();
+  var phone = document.getElementById('fphone').value.trim();
+  var experience = document.querySelector('input[name="experience"]:checked');
+  var days = document.querySelector('input[name="days"]:checked');
+
+  var errorEl = document.getElementById('formError');
+  errorEl.style.display = 'none';
+
+  if (!name || !email || !phone || !experience || !days) {
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  var data = {
+    name: name,
+    email: email,
+    phone: phone,
+    experience: experience.value,
+    days_per_month: days.value
+  };
+
+  fetch('https://hook.us1.make.com/cwtgvoq8wons5fapkcueyxvikelss7m9', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    document.getElementById('theForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  })
+  .catch(function() {
+    document.getElementById('theForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+}
+</script>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta" id="contact">
+  <div class="section-inner">
+    <div class="section-label">Ready?</div>
+    <div class="section-title">Let's talk.</div>
+    <p class="bottom-cta-sub">Call to set up a conversation. No pressure. If the deal makes sense for both of us, we move forward.</p>
+    <a href="tel:+18323494739" class="phone-display" style="text-decoration:none;">(832) 349-4739</a>
+    <br>
+    <a href="tel:+18323494739" class="cta-btn">Call Now &#8594;</a>
+    <div class="phone-note">Houston, TX &nbsp;|&nbsp; Catan Strategy Group</div>
+  </div>
+</section>
+
+<div class="footer">
+  &copy; 2020 Catan Strategy Group &nbsp;|&nbsp; Greater Houston, TX &nbsp;|&nbsp; Equipment Partnership Opportunities
+</div>
+
+</body>
+</html>
